@@ -1,0 +1,2 @@
+include ':muxipay-pwlib-sample'
+rootProject.name = "muxipay-lib-sample"

@@ -1,0 +1,93 @@
+apply plugin: 'com.android.application'
+apply plugin: 'checkstyle'
+apply plugin: 'com.jakewharton.butterknife'
+
+android {
+    compileSdkVersion rootProject.ext.compileVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVer
+        targetSdkVersion rootProject.ext.targetSdkVer
+        applicationId "muxi.sample"
+        versionCode 1
+        versionName "1.0.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildTypes.each {
+        def TYPE_STRING = "String"
+        def API_KEY = "API_KEY"
+        it.buildConfigField TYPE_STRING, API_KEY, "\""+getProps(API_KEY)+"\""
+    }
+
+    // Butterknife requires Java 8.
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+def getProps(String propName) {
+    def propsFile = rootProject.file('local.properties')
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        return props[propName]
+    } else {
+        return ""
+    }
+}
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.androidxAppCompatVersion"
+    implementation "androidx.cardview:cardview:$rootProject.ext.androidxLibVersion"
+    implementation "com.google.android.material:material:$rootProject.ext.materialVersion"
+
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.ext.constraintLayoutVersion"
+    implementation "com.jakewharton:butterknife:$rootProject.ext.butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterKnifeVersion"
+
+
+    //     pwpservices-sdk external deps
+    api "com.josesamuel:remoter-annotations:$rootProject.ext.remoterServiceVersion"
+    implementation "org.parceler:parceler-api:$rootProject.ext.parcelerVersion"
+    api "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.okHttpVersion"
+    api "com.squareup.okhttp3:okhttp:$rootProject.ext.okHttpVersion"
+
+    //    pwhal common-debug external deps
+    implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation "androidx.biometric:biometric:1.0.1"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
+
+
+
+    // pwlib smartphone external deps
+    implementation "javax.annotation:jsr250-api:1.0"
+    implementation "org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.4.10"
+    implementation "androidx.annotation:annotation:1.1.0"
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "com.google.android.gms:play-services-vision:18.0.0"
+    implementation "com.google.dagger:dagger:2.23.2"
+
+
+    //    muxipay-sdk external deps
+    implementation "com.google.code.gson:gson:2.8.2"
+    implementation "com.squareup.retrofit2:converter-scalars:2.6.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.6.0"
+
+
+    //    smartphone external deps
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
+}
+
